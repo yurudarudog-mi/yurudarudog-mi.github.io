@@ -258,7 +258,7 @@ const DATA = [
 "ゆるだるシリーズ"
 ],
 "g": "文字なし",
-"a": "nt",
+"a": "all",
 "u": "https://store.line.me/stickershop/product/37167653/ja",
 "i": "https://stickershop.line-scdn.net/stickershop/v1/product/37167653/LINEStorePC/main.png"
 },
@@ -343,7 +343,7 @@ const DATA = [
 "ゆるだるシリーズ"
 ],
 "g": "文字なし 英語",
-"a": "nt",
+"a": "all",
 "u": "https://store.line.me/stickershop/product/37113243/ja",
 "i": "https://stickershop.line-scdn.net/stickershop/v1/product/37113243/LINEStorePC/main.png"
 },
@@ -3099,7 +3099,7 @@ const SERIES_NAME = {
   "くすみパステル":{tw:"霧感粉彩",en:"Muted pastel"},"水彩シリーズ":{tw:"水彩系列",en:"Watercolor"},"丁寧語シリーズ":{tw:"禮貌用語系列",en:"Polite words"},"連絡シリーズ":{tw:"聯絡系列",en:"Contact"},"北欧シリーズ":{tw:"北歐風",en:"Nordic"},"その他":{tw:"其他",en:"Others"}
 };
 const SERIES_TOP = ["ゆるだるシリーズ","水彩シリーズ","丁寧語シリーズ","連絡シリーズ"];
-const KIND_FLOWER = {all:5, s:0, e:10, t:6};
+const KIND_FLOWER = {all:5, s:0, a:8, e:10, t:6};
 const AUD = {jp:x=>x.a==="jp"||x.a==="all", tw:x=>x.a==="tw"||x.a==="nt"||x.a==="all", en:x=>x.a==="nt"||x.a==="all"};
 const PAGE = 40;
 
@@ -3110,7 +3110,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const sName = (s, aud) => aud==="jp" ? s : ((SERIES_NAME[s]||{})[aud] || s);
 const link = (u, aud) => u.replace(/\/ja$/, "/" + T[aud].url);
-const isKind = (x,k) => k==="s" ? (x.k==="s"||x.k==="a") : x.k===k;
+const isKind = (x,k) => x.k===k;
 const pool = () => DATA.filter(AUD[st.aud]);
 // ひらがなで探しても漢字の作品が出るように
 const SYN = {いぬ:["犬","dog"],わんこ:["犬","dog"],ねこ:["猫","cat"],にゃんこ:["猫"],くま:["熊","bear"],うさぎ:["兎"],ぶた:["豚"],らくだ:["らくだ","駱駝"],ふで:["筆"],はな:["花"],すいさい:["水彩"],ていねい:["丁寧"],けいご:["敬語"],れんらく:["連絡"],ふうふ:["夫婦"],たいわん:["台湾","台灣"],もじなし:["文字なし"],えもじ:["絵文字"],きせかえ:["着せかえ","着せ替え"],うごく:["動く"]};
@@ -3134,7 +3134,7 @@ function renderControls(){
   $("h1").textContent = t.h1; $("sub").textContent = t.sub; $("lead").textContent = t.lead;
   $("q").placeholder = t.q;
   document.querySelectorAll(".aud button").forEach(b => b.setAttribute("aria-pressed", b.dataset.aud===st.aud));
-  $("kinds").innerHTML = ["all","s","e","t"].map(k => {
+  $("kinds").innerHTML = ["all","s","a","e","t"].map(k => {
     const n = k==="all" ? p.length : p.filter(x=>isKind(x,k)).length;
     return `<button type="button" class="chip" id="kind-${k}" data-k="${k}" aria-pressed="${st.kind===k}"><img src="${FL[KIND_FLOWER[k]]}" alt="">${esc(t[k])}<span class="c">${n}</span></button>`;
   }).join("");
