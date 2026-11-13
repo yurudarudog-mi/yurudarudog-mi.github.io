@@ -283,15 +283,20 @@ function renderControls(){
     const n = k==="all" ? p.length : p.filter(x=>isKind(x,k)).length;
     return `<button type="button" class="chip" id="kind-${k}" data-k="${k}" aria-pressed="${st.kind===k}"><img src="${FL[KIND_FLOWER[k]]}" alt="">${esc(t[k])}<span class="c">${n}</span></button>`;
   }).join("");
+  renderSeries();
+  $("sort").innerHTML = `<option value="new"${st.sort==="new"?" selected":""}>${t.new}</option><option value="old"${st.sort==="old"?" selected":""}>${t.old}</option>`;
+  $("store").textContent = t.store; $("store").href = "https://store.line.me/stickershop/author/4529243/" + t.url;
+  $("note").textContent = t.note;
+}
+
+function renderSeries(){
+  const t = T[st.aud], p = pool().filter(x => st.kind==="all" || isKind(x,st.kind));
   const counts = {}; p.forEach(x => x.s.forEach(s => counts[s]=(counts[s]||0)+1));
   const rank = s => { const i = SERIES_TOP.indexOf(s); return s==="その他" ? 999 : i>=0 ? i : 100; };
   const opts = Object.keys(counts).sort((a,b)=> rank(a)-rank(b) || counts[b]-counts[a]);
   if (st.series && !counts[st.series]) st.series = "";
   $("series").innerHTML = `<option value="">${esc(t.allSeries)}</option>` +
     opts.map(s => `<option value="${esc(s)}"${s===st.series?" selected":""}>${esc(sName(s,st.aud))} (${counts[s]})</option>`).join("");
-  $("sort").innerHTML = `<option value="new"${st.sort==="new"?" selected":""}>${t.new}</option><option value="old"${st.sort==="old"?" selected":""}>${t.old}</option>`;
-  $("store").textContent = t.store; $("store").href = "https://store.line.me/stickershop/author/4529243/" + t.url;
-  $("note").textContent = t.note;
 }
 
 function renderGrid(){
@@ -342,7 +347,7 @@ $("kinds").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   st.kind = b.dataset.k; st.shown = PAGE;
   document.querySelectorAll("#kinds .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.k===st.kind));
-  renderGrid();
+  renderSeries(); renderGrid();
 });
 $("series").addEventListener("change", e => { st.series = e.target.value; st.shown = PAGE; renderGrid(); });
 $("sort").addEventListener("change", e => { st.sort = e.target.value; renderGrid(); });
